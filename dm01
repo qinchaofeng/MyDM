@@ -1,0 +1,26 @@
+import pandas as pd
+from sklearn import linear_model
+import matplotlib.pyplot as plt
+
+# 读入CSV数据
+csv_data = pd.read_csv('E:\pycode\data\md0301.csv').dropna() #过滤空值
+print(csv_data.shape)
+print(csv_data.all)
+
+# 建立线性回归模型
+regr = linear_model.LinearRegression()
+# 拟合
+regr.fit(csv_data['m_motor_rotate'].values.reshape(-1, 1), csv_data['vehicle_speed']) # 注意此处.reshape(-1, 1)，因为X是一维的！
+#得到线性回归公式的系数y=ax+b
+a=regr.coef_
+print(len(a))
+b=regr.intercept_
+print(b)
+
+print(regr.score(csv_data['m_motor_rotate'].values.reshape(-1, 1), csv_data['vehicle_speed']))
+# 1.真实的点
+plt.scatter(csv_data['m_motor_rotate'], csv_data['vehicle_speed'], color='black')
+# 2.拟合的直线
+plt.plot(csv_data['m_motor_rotate'], regr.predict(csv_data['m_motor_rotate'].values.reshape(-1,1)), color='red', linewidth=1)
+
+plt.show()
